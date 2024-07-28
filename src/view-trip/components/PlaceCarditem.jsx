@@ -1,6 +1,5 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { FaMapLocationDot } from 'react-icons/fa6';
 
 function PlaceCarditem({ place }) {
   return (
@@ -19,8 +18,6 @@ function PlaceCarditem({ place }) {
         <div>
           <h2 className='font-bold text-lg'>{place?.name || 'Name Not Available'}</h2>
           <p className='text-sm text-gray-400'>{place?.details || 'No Details Available'}</p>
-          <h2 className='mt-2'>🕒 {place?.timeToSpend || 'No Time Information Available'}</h2>
-          <p className='text-sm'>📍 {place?.geoCoordinates || 'No Coordinates Available'}</p>
           <h2>💵 {place?.ticketPrice || 'No Ticket Price Available'}</h2>
         </div>
       </div>
