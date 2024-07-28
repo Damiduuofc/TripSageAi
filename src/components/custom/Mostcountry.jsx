@@ -6,7 +6,7 @@ function Mostcountry() {
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-12">
   <h2 className="text-3xl font-bold text-left mb-8">Most Visited Countries in the World - Top 3</h2>
-  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-8">
+  <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-8">
     <article className="overflow-hidden rounded-lg shadow transition hover:shadow-lg">
       <img
         alt="France"
