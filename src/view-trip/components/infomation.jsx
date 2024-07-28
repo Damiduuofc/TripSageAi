@@ -74,9 +74,7 @@ const Information = ({ trip }) => {
       {photoUrl ? (
         <img src={photoUrl} alt='Place' className='h-[340px] w-full object-cover rounded-xl mt-5' />
       ) : (
-        <div className='h-[340px] w-full flex items-center justify-center rounded-xl mt-5 bg-gray-200'>
-          <span className='text-gray-500'>{error || 'No Image Available'}</span>
-        </div>
+        <img src='/unavailable-image.jpg' alt='Unavailable' className='h-[340px] w-full object-cover rounded-xl mt-5' />
       )}
       <div className='flex justify-between items-center'>
         <div className='my-5 flex flex-col gap-2'>

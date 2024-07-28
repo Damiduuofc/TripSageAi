@@ -15,7 +15,11 @@ function Hotels({ trip }) {
             className='hover:scale-105 transition-all cursor-pointer'
           >
             <div className='rounded-xl overflow-hidden shadow-md'>
-              <img src={hotel?.hotelImageUrl || '/bg.jpg'} alt='Hotel Image' className='w-full h-48 object-cover' />
+              <img 
+                src={hotel?.hotelImageUrl || '/unavailable-image.jpg'} 
+                alt='Hotel Image' 
+                className='w-full h-48 object-cover' 
+              />
               <div className='p-3'>
                 <h2 className='text-lg font-semibold'>{hotel?.hotelName || 'Hotel Name Not Available'}</h2>
                 <p className='text-xs text-gray-500'>📍{hotel?.hotelAddress || 'Hotel Address Not Available'}</p>

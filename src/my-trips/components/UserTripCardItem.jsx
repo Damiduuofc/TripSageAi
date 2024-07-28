@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
 function UserTripCardItem({ trip }) {
-  const [imageUrl, setImageUrl] = useState('/a.webp'); // Default image
+  const [imageUrl, setImageUrl] = useState('unavailable-image.jpg'); // Default image
 
   useEffect(() => {
     // Replace this with your logic to fetch image based on location
