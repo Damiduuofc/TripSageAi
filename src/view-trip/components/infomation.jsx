@@ -6,6 +6,7 @@ import { GetPlaceDetails } from '@/service/GlobalApi';
 const Information = ({ trip }) => {
   const [photoUrl, setPhotoUrl] = useState('');
   const [error, setError] = useState('');
+  const [showCopyMessage, setShowCopyMessage] = useState(false);
 
   useEffect(() => {
     const GetPlacePhoto = async () => {
@@ -14,7 +15,6 @@ const Information = ({ trip }) => {
         return;
       }
 
-      // Log request data for debugging
       console.log('API request data:', {
         textQuery: trip.userSelection.location.label,
       });
@@ -24,7 +24,6 @@ const Information = ({ trip }) => {
           textQuery: trip.userSelection.location.label,
         });
 
-        // Log full API response for debugging
         console.log('API Response:', result.data);
 
         const places = result.data?.places;
@@ -69,6 +68,20 @@ const Information = ({ trip }) => {
 
   const { userSelection } = trip || {};
 
+  const handleShare = () => {
+    const currentUrl = window.location.href;
+    navigator.clipboard.writeText(currentUrl)
+      .then(() => {
+        setShowCopyMessage(true);
+        setTimeout(() => {
+          setShowCopyMessage(false);
+        }, 3000);
+      })
+      .catch(err => {
+        console.error('Error copying link: ', err);
+      });
+  };
+
   return (
     <div>
       {photoUrl ? (
@@ -85,10 +98,31 @@ const Information = ({ trip }) => {
             <h2 className='p-1 px-3 bg-gray-200 rounded-full text-gray-500 text-xs md:text-md'>🏄🏻‍♂️ No. of Travelers: {userSelection?.Traveler || 'N/A'}</h2>
           </div>
         </div>
-        <Button>
+        <Button onClick={handleShare}>
           <IoIosSend />
         </Button>
       </div>
+
+      {showCopyMessage && (
+        <aside
+          className="fixed bottom-4 end-4 z-50 flex items-center justify-center gap-4 rounded-lg bg-black px-5 py-3 text-white"
+        >
+          <a href="#" target="_blank" rel="noreferrer" className="text-sm font-medium hover:opacity-75">
+          Link copied to clipboard 📋
+          </a>
+
+          <button className="rounded bg-white/20 p-1 hover:bg-white/10" onClick={() => setShowCopyMessage(false)}>
+            <span className="sr-only">Close</span>
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+              <path
+                fillRule="evenodd"
+                d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                clipRule="evenodd"
+              />
+            </svg>
+          </button>
+        </aside>
+      )}
     </div>
   );
 };
