@@ -1,0 +1,94 @@
+import React, { useEffect, useState } from 'react';
+import { Button } from '../ui/button';
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { googleLogout, useGoogleLogin } from '@react-oauth/google';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { FcGoogle } from "react-icons/fc";
+import axios from 'axios';
+
+function Header() {
+  const [user, setUser] = useState(JSON.parse(localStorage.getItem('user')));
+  const [openDialog, setOpenDialog] = useState(false);
+
+  useEffect(() => {
+    console.log(user);
+  }, [user]);
+
+  const login = useGoogleLogin({
+    onSuccess: (tokenResponse) => GetUserProfile(tokenResponse),
+    onError: (error) => console.log(error),
+  });
+
+  const GetUserProfile = async (tokenInfo) => {
+    try {
+      const response = await axios.get(`https://www.googleapis.com/oauth2/v2/userinfo`, {
+        headers: {
+          Authorization: `Bearer ${tokenInfo?.access_token}`,
+          Accept: 'application/json',
+        },
+      });
+      console.log("User profile fetched:", response.data);
+      localStorage.setItem('user', JSON.stringify(response.data));
+      setUser(response.data);
+      setOpenDialog(false);
+    } catch (error) {
+      console.error("Error fetching user profile:", error);
+    }
+  };
+
+  const handleLogout = () => {
+    googleLogout();
+    localStorage.clear();
+    setUser(null);
+  };
+
+  return (
+    <div className='p-3 shadow-sm flex justify-between items-center px-5'>
+      <a href='/' rel='noopener noreferrer'>
+        <img src='/Logo.png' width={100} height={60} alt='Logo' />
+      </a>
+
+      <div>
+        {user ? (
+          <div className='flex items-center gap-3'>
+            <a href='/create-trip'>
+            <Button variant="outline" className="rounded-full">+ Create Trip</Button>
+            </a>
+            <a href='/my-trips'>
+            <Button variant="outline" className="rounded-full">My Trips</Button>
+            </a>
+            <Popover>
+              <PopoverTrigger>
+                <img src={user?.picture} className='h-[35px] w-[35px] rounded-full' alt='User Profile' />
+              </PopoverTrigger>
+              <PopoverContent>
+                <h2 className='cursor-pointer' onClick={handleLogout}>Logout</h2>
+              </PopoverContent>
+            </Popover>
+          </div>
+        ) : (
+          <Button onClick={() => setOpenDialog(true)}>Sign In</Button>
+        )}
+      </div>
+
+      <Dialog open={openDialog} onOpenChange={setOpenDialog}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Sign In With Google</DialogTitle>
+            <DialogDescription>
+              <img src='/Logo.png' width={150} alt='Logo' />
+              <h2 className='font-bold text-lg mt-7'>Sign In With Google</h2>
+              <p>Sign in to the App with Google authentication securely</p>
+              <Button onClick={login} className="w-full mt-5 flex gap-4 items-center">
+                <FcGoogle className='h-7 w-7' />
+                Sign In With Google
+              </Button>
+            </DialogDescription>
+          </DialogHeader>
+        </DialogContent>
+      </Dialog>
+    </div>
+  );
+}
+
+export default Header;
