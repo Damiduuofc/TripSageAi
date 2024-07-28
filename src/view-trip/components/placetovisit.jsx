@@ -20,7 +20,7 @@ function Placetovisit({ trip }) {
           return (
             <div key={index} className='mb-4'>
               <h2 className='font-medium text-lg'>Day {dayNumber}</h2>
-              <div className='grid md:grid-cols-2 gap-5'>
+              <div className='grid sm:grid-cols-2 md:grid-cols-2 gap-5'>
                 {places.map((place, placeIndex) => (
                   <div key={placeIndex} className='ml-4 my-3'>
                               <h2 className='mt-2'>🕒 {place?.timeSlot || 'No Time Information Available'}</h2>
