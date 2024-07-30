@@ -12,7 +12,7 @@ import {
     DialogTitle,
 } from "@/components/ui/dialog";
 import { FcGoogle } from "react-icons/fc";
-import { useGoogleLogin } from '@react-oauth/google';
+import { useAuth } from '@/contexts/AuthContext';
 import axios from 'axios';
 import { doc, setDoc } from 'firebase/firestore';
 import { db } from '@/service/firebaseConfig.jsx';
@@ -23,8 +23,8 @@ function CreateTrip() {
     const [place, setPlace] = useState(null);
     const [formData, setFormData] = useState({ location: '', noOfdays: '', budget: '', Traveler: '' });
     const [error, setError] = useState('');
-    const [openDialog, setOpenDialog] = useState(false);
     const [loading, setLoading] = useState(false);
+    const { user, login, openDialog, setOpenDialog } = useAuth();
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -38,14 +38,7 @@ function CreateTrip() {
         }));
     };
 
-    const login = useGoogleLogin({
-        onSuccess: (codeResp) => GetUserProfile(codeResp),
-        onError: (error) => console.log(error)
-    });
-
     const OnGenerateTrip = async () => {
-        const user = JSON.parse(localStorage.getItem('user'));
-
         if (!user) {
             setOpenDialog(true);
             return;
@@ -83,7 +76,6 @@ function CreateTrip() {
     const SaveAiTrip = async (TripData) => {
         setLoading(true);
         try {
-            const user = JSON.parse(localStorage.getItem('user'));
             let parsedTripData;
 
             try {
@@ -111,25 +103,6 @@ function CreateTrip() {
         } finally {
             setLoading(false);
         }
-    };
-
-    const GetUserProfile = (tokenInfo) => {
-        axios.get(`https://www.googleapis.com/oauth2/v2/userinfo`, {
-            headers: {
-                Authorization: `Bearer ${tokenInfo?.access_token}`,
-                Accept: 'application/json'
-            }
-        })
-        .then((resp) => {
-            console.log("User profile fetched:", resp);
-            localStorage.setItem('user', JSON.stringify(resp.data));
-            setOpenDialog(false);
-            OnGenerateTrip();
-        })
-        .catch((error) => {
-            console.error("Error fetching user profile:", error);
-            toast.error("An error occurred while fetching the user profile.");
-        });
     };
 
     return (
@@ -205,25 +178,6 @@ function CreateTrip() {
                         )}
                     </Button>
                 </div>
-                <Dialog open={openDialog}>
-                    <DialogContent>
-                        <DialogHeader>
-                            <DialogTitle>Sign In With Google</DialogTitle>
-                            <DialogDescription>
-                                <img src='/Logo.png' width={150} alt='Logo' />
-                                <h2 className='font-bold text-lg mt-7'>Sign In With Google</h2>
-                                <p>Sign in to the App with Google authentication securely</p>
-                                <Button
-                                    onClick={login}
-                                    className="w-full mt-5 flex gap-4 items-center"
-                                >
-                                    <FcGoogle className='h-7 w-7' />
-                                    Sign In With Google
-                                </Button>
-                            </DialogDescription>
-                        </DialogHeader>
-                    </DialogContent>
-                </Dialog>
             </div>
         </div>
     );
