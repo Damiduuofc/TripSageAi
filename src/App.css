@@ -38,3 +38,16 @@
 .read-the-docs {
   color: #888;
 }
+.app-container {
+  position: relative;
+  overflow: hidden;
+}
+
+.bg-layer {
+  z-index: -1; /* Ensures the background is behind the content */
+}
+
+.content {
+  position: relative;
+  z-index: 1; /* Ensures the content is above the background */
+}

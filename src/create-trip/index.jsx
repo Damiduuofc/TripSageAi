@@ -18,6 +18,7 @@ import { doc, setDoc } from 'firebase/firestore';
 import { db } from '@/service/firebaseConfig.jsx';
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { useNavigate } from 'react-router-dom';
+import GridPattern from '../components/magicui/grid-pattern.jsx'; // Import GridPattern
 
 function CreateTrip() {
     const [place, setPlace] = useState(null);
@@ -106,77 +107,83 @@ function CreateTrip() {
     };
 
     return (
-        <div className='sm:px-10 md:px-32 lg:px-56 xl:px-10 p-5 mt-10'>
-            <h2 className='font-bold text-3xl'>Tell us your travel preferences 🌍✈️🏖️🏔️🍽️🏨</h2>
-            <p className='mt-3 text-gray-500 text-xl'>
-                Just give us a few details, and our trip planner will create a personalized itinerary just for you.
-            </p>
+        <div className='relative overflow-hidden'>
+            {/* Background Pattern */}
+            <GridPattern width={40} height={40} strokeDasharray="4" className="absolute inset-0" />
 
-            <div className='mt-20 flex flex-col gap-10'>
-                <div>
-                    <h2 className='text-xl my-3 font-medium'>What's your destination of choice?</h2>
-                    <GooglePlacesAutocomplete
-                        apiKey={import.meta.env.VITE_GOOGLE_PLACE_API_KEY}
-                        selectProps={{
-                            value: place,
-                            onChange: (v) => { setPlace(v); handleInputChange('location', v); }
-                        }}
-                    />
-                </div> 
-                <div>
-                    <h2 className='text-xl my-3 font-medium'>How many days are you planning for your trip?</h2>
-                    <input
-                        placeholder='Example: 3'
-                        type='number'
-                        className='border border-gray-300 rounded p-2 w-full'
-                        value={formData.noOfdays}
-                        onChange={(e) => handleInputChange('noOfdays', e.target.value)}
-                    />
-                </div>
-                {error && <p className='text-red-500'>{error}</p>}
-                <div>
-                    <h2 className='text-xl my-3 font-medium'>What's your budget?</h2>
-                    <div className='grid grid-cols-3 gap-5 mt-5'>
-                        {SelectBudgetOptions.map((item, index) => (
-                            <div key={index}
-                                onClick={() => handleInputChange('budget', item.title)}
-                                className={`p-4 border cursor-pointer rounded-lg hover:shadow-lg ${formData.budget === item.title && 'shadow-lg border-black'}`}>
-                                <h2 className='text-4xl'>{item.icon}</h2>
-                                <h2 className='font-bold text-lg'>{item.title}</h2>
-                                <h2 className='text-sm text-gray-500'>{item.desc}</h2>
-                            </div>
-                        ))}
-                    </div>
-                </div>
+            {/* Main Content */}
+            <div className='relative sm:px-10 md:px-32 lg:px-56 xl:px-10 p-5 mt-20'>
+                <h2 className='font-bold text-3xl'>Tell us your travel preferences 🌍✈️🏖️🏔️🍽️🏨</h2>
+                <p className='mt-3 text-gray-500 text-xl'>
+                    Just give us a few details, and our trip planner will create a personalized itinerary just for you.
+                </p>
 
-                <div>
-                    <h2 className='text-xl my-3 font-medium'>Who do you plan to travel with on your next adventure?</h2>
-                    <div className='grid grid-cols-3 gap-5 mt-5'>
-                        {SelectTravelersList.map((item, index) => (
-                            <div key={index}
-                                onClick={() => handleInputChange('Traveler', item.people)}
-                                className={`p-4 border rounded-lg cursor-pointer hover:shadow-lg ${formData.Traveler === item.people && 'shadow-lg border-black'}`}>
-                                <h2 className='text-4xl'>{item.icon}</h2>
-                                <h2 className='font-bold text-lg'>{item.title}</h2>
-                                <h2 className='text-sm text-gray-500'>{item.desc}</h2>
-                            </div>
-                        ))}
+                <div className='mt-20 flex flex-col gap-10'>
+                    <div>
+                        <h2 className='text-xl my-3 font-medium'>What's your destination of choice?</h2>
+                        <GooglePlacesAutocomplete
+                            apiKey={import.meta.env.VITE_GOOGLE_PLACE_API_KEY}
+                            selectProps={{
+                                value: place,
+                                onChange: (v) => { setPlace(v); handleInputChange('location', v); }
+                            }}
+                        />
+                    </div> 
+                    <div>
+                        <h2 className='text-xl my-3 font-medium'>How many days are you planning for your trip?</h2>
+                        <input
+                            placeholder='Example: 3'
+                            type='number'
+                            className='border border-gray-300 rounded p-2 w-full'
+                            value={formData.noOfdays}
+                            onChange={(e) => handleInputChange('noOfdays', e.target.value)}
+                        />
                     </div>
-                </div>
-                <div className='my-10 justify-end flex'>
-                    <Button
-                        disabled={loading}
-                        onClick={OnGenerateTrip}
-                        className='flex items-center'
-                    >
-                        {loading ? (
-                            <>
-                                <AiOutlineLoading3Quarters className='h-7 w-7 animate-spin' />
-                            </>
-                        ) : (
-                            'Generate Trip'
-                        )}
-                    </Button>
+                    {error && <p className='text-red-500'>{error}</p>}
+                    <div>
+                        <h2 className='text-xl my-3 font-medium'>What's your budget?</h2>
+                        <div className='grid grid-cols-3 gap-5 mt-5'>
+                            {SelectBudgetOptions.map((item, index) => (
+                                <div key={index}
+                                    onClick={() => handleInputChange('budget', item.title)}
+                                    className={`p-4 border cursor-pointer rounded-lg hover:shadow-lg ${formData.budget === item.title && 'shadow-lg border-black'}`}>
+                                    <h2 className='text-4xl'>{item.icon}</h2>
+                                    <h2 className='font-bold text-lg'>{item.title}</h2>
+                                    <h2 className='text-sm text-gray-500'>{item.desc}</h2>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+
+                    <div>
+                        <h2 className='text-xl my-3 font-medium'>Who do you plan to travel with on your next adventure?</h2>
+                        <div className='grid grid-cols-3 gap-5 mt-5'>
+                            {SelectTravelersList.map((item, index) => (
+                                <div key={index}
+                                    onClick={() => handleInputChange('Traveler', item.people)}
+                                    className={`p-4 border rounded-lg cursor-pointer hover:shadow-lg ${formData.Traveler === item.people && 'shadow-lg border-black'}`}>
+                                    <h2 className='text-4xl'>{item.icon}</h2>
+                                    <h2 className='font-bold text-lg'>{item.title}</h2>
+                                    <h2 className='text-sm text-gray-500'>{item.desc}</h2>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                    <div className='my-10 justify-end flex'>
+                        <Button
+                            disabled={loading}
+                            onClick={OnGenerateTrip}
+                            className='flex items-center'
+                        >
+                            {loading ? (
+                                <>
+                                    <AiOutlineLoading3Quarters className='h-7 w-7 animate-spin' />
+                                </>
+                            ) : (
+                                'Generate Trip'
+                            )}
+                        </Button>
+                    </div>
                 </div>
             </div>
         </div>
