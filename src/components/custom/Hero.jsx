@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button } from '../ui/button';
 import { Link } from 'react-router-dom';
-import BlurIn from "@/components/magicui/blur-in";
+import BlurIn from "../magicui/blur-in";
 // import RetroGrid from '@/components/magicui/retro-grid';
 
 function Hero() {
