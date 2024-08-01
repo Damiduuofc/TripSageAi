@@ -8,37 +8,42 @@ function Mostcountry() {
   <h2 className="text-3xl font-bold text-left mb-8">Most Visited Countries in the World - Top 3</h2>
   <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-8">
     <article className="overflow-hidden rounded-lg shadow transition hover:shadow-lg">
+    <a href="https://en.wikipedia.org/wiki/World_Tourism_rankings"target="_blank">
       <img
         alt="France"
         src="/France.jpg"
         className="h-64 w-full object-cover"
-      />
+      /></a>
       <div className="bg-white p-6">
-        <a href="#">
+        <a href="https://en.wikipedia.org/wiki/World_Tourism_rankings"target="_blank">
           <h3 className="mt-0.5 text-xl text-gray-900 text-left">France</h3>
         </a>
       </div>
     </article>
     <article className="overflow-hidden rounded-lg shadow transition hover:shadow-lg">
+    <a href="https://en.wikipedia.org/wiki/World_Tourism_rankings"target="_blank">
+
       <img
         alt="Spain"
         src="/Spain.jpg"
         className="h-64 w-full object-cover"
-      />
+      /></a>
       <div className="bg-white p-6">
-        <a href="#">
+        <a href="https://en.wikipedia.org/wiki/World_Tourism_rankings"target="_blank">
           <h3 className="mt-0.5 text-xl text-gray-900 text-left">Spain</h3>
         </a>
       </div>
     </article>
     <article className="overflow-hidden rounded-lg shadow transition hover:shadow-lg">
+    <a href="https://en.wikipedia.org/wiki/World_Tourism_rankings"target="_blank">
+
       <img
         alt="United States"
         src="/United States.jpg"
         className="h-64 w-full object-cover"
-      />
+      /></a>
       <div className="bg-white p-6">
-        <a href="#">
+        <a href="https://en.wikipedia.org/wiki/World_Tourism_rankings"target="_blank">
           <h3 className="mt-0.5 text-xl text-gray-900 text-left">United States</h3>
         </a>
       </div>

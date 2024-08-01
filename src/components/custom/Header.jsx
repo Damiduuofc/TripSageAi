@@ -38,7 +38,7 @@ function Header() {
                                         <h2 className='cursor-pointer block rounded-lg px-4 py-2  text-gray-500 hover:bg-gray-50 hover:text-gray-700'>My Trips</h2>
                                     </a>
                                 )}
-                                <div className='divider'></div>
+                                <div className={`${isSmallScreen ? 'block' : 'hidden'} divider`}></div>
                                 <h2 className='cursor-pointer block rounded-lg px-4 py-2  text-gray-500 hover:bg-gray-50 hover:text-gray-700' onClick={handleLogout}>Logout</h2>
                             </PopoverContent>
                         </Popover>
