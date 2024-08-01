@@ -10,8 +10,9 @@ function MyTrips() {
   const user = JSON.parse(localStorage.getItem('user'));
 
   useEffect(() => {
+    console.log('User:', user); // Debug log
     GetUserTrips();
-  }, []);
+  }, [user]);
 
   const GetUserTrips = async () => {
     if (!user) {
@@ -27,16 +28,18 @@ function MyTrips() {
       querySnapshot.forEach((doc) => {
         userTrips.push({ id: doc.id, ...doc.data() });
       });
+      console.log('Fetched trips:', userTrips); // Debug log
       setTrips(userTrips);
     } catch (error) {
       console.error('Error fetching user trips:', error);
     }
   };
 
-  // Fallback if user or name is not available
   const userName = user && user.name ? user.name : 'User';
+  console.log('User Name:', userName); // Debug log
+
   return (
-    <div className='sm:px-10 md:px-32 lg:px-56 xl:px-72 px-5 mt-10'>
+    <div className='sm:px-10 md:px-32 lg:px-56 xl:px-72 px-5 mt-24'>
       <h2 className='font-bold text-3xl'>{userName}'s Trips</h2>
       <div className='grid grid-cols-2 md:grid-cols-3 gap-5'>
         {trips.length > 0 ? (

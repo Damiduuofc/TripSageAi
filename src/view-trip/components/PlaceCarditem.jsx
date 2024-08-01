@@ -9,7 +9,7 @@ function PlaceCarditem({ place }) {
   return (
     <Link 
       to={'https://www.google.com/maps/search/?api=1&query=' + 
-          encodeURIComponent((place?.name || '') + ' ' + (place?.geoCoordinates || ''))}
+          encodeURIComponent(place?.name || '')}
       target='_blank'
       rel='noopener noreferrer'
     >
