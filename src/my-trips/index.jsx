@@ -19,25 +19,32 @@ function MyTrips() {
       return;
     }
 
-    const q = query(collection(db, 'AITrips'), where('userEmail', '==', user.email));
-    const querySnapshot = await getDocs(q);
-    const userTrips = [];
-    querySnapshot.forEach((doc) => {
-      userTrips.push({ id: doc.id, ...doc.data() });
-    });
-    setTrips(userTrips);
+    try {
+      console.log('Fetching trips for user:', user.email);
+      const q = query(collection(db, 'AITrips'), where('userEmail', '==', user.email));
+      const querySnapshot = await getDocs(q);
+      const userTrips = [];
+      querySnapshot.forEach((doc) => {
+        userTrips.push({ id: doc.id, ...doc.data() });
+      });
+      setTrips(userTrips);
+    } catch (error) {
+      console.error('Error fetching user trips:', error);
+    }
   };
 
+  // Fallback if user or name is not available
+  const userName = user && user.name ? user.name : 'User';
   return (
     <div className='sm:px-10 md:px-32 lg:px-56 xl:px-72 px-5 mt-10'>
-      <h2 className='font-bold text-3xl'> {user?.name}'s Trips</h2>
+      <h2 className='font-bold text-3xl'>{userName}'s Trips</h2>
       <div className='grid grid-cols-2 md:grid-cols-3 gap-5'>
         {trips.length > 0 ? (
-          trips.map((trip, index) => (
-            <UserTripCardItem key={trip.id} trip={trip}  />
+          trips.map((trip) => (
+            <UserTripCardItem key={trip.id} trip={trip} />
           ))
         ) : (
-          <p></p>
+          <p>No trips found.</p>
         )}
       </div>
     </div>

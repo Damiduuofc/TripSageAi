@@ -51,3 +51,7 @@
   position: relative;
   z-index: 1; /* Ensures the content is above the background */
 }
+.divider {
+  border-bottom: 1px solid #e0e0e0; /* Light gray color for the divider */
+  margin: 10px 0; /* Space around the divider */
+}

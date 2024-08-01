@@ -4,10 +4,12 @@ import { Button } from '../ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { FcGoogle } from "react-icons/fc";
+import useMediaQuery from '../hooks/useMediaQuery'; // Import the custom hook
 
 function Header() {
     const auth = useAuth();
     const { user, login, handleLogout, openDialog, setOpenDialog } = auth || {};
+    const isSmallScreen = useMediaQuery('(max-width: 640px)'); // Define the breakpoint for small screens
 
     return (
         <div className='p-3 shadow-sm flex justify-between items-center px-5 fixed top-0 left-0 right-0 bg-white z-50'>
@@ -21,15 +23,23 @@ function Header() {
                         <a href='/create-trip'>
                             <Button variant="outline" className="rounded-full">+ Create Trip</Button>
                         </a>
-                        <a href='/my-trips'>
-                            <Button variant="outline" className="rounded-full">My Trips</Button>
-                        </a>
+                        {!isSmallScreen && (
+                            <a href='/my-trips'>
+                                <Button variant="outline" className="rounded-full">My Trips</Button>
+                            </a>
+                        )}
                         <Popover>
                             <PopoverTrigger>
                                 <img src={user?.picture} className='h-[35px] w-[35px] rounded-full' alt='User Profile' />
                             </PopoverTrigger>
                             <PopoverContent>
-                                <h2 className='cursor-pointer' onClick={handleLogout}>Logout</h2>
+                                {isSmallScreen && (
+                                    <a href='/my-trips'>
+                                        <h2 className='cursor-pointer block rounded-lg px-4 py-2  text-gray-500 hover:bg-gray-50 hover:text-gray-700'>My Trips</h2>
+                                    </a>
+                                )}
+                                <div className='divider'></div>
+                                <h2 className='cursor-pointer block rounded-lg px-4 py-2  text-gray-500 hover:bg-gray-50 hover:text-gray-700' onClick={handleLogout}>Logout</h2>
                             </PopoverContent>
                         </Popover>
                     </div>
