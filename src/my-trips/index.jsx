@@ -47,7 +47,7 @@ function MyTrips() {
             <UserTripCardItem key={trip.id} trip={trip} />
           ))
         ) : (
-          <p>No trips found.</p>
+          <p></p>
         )}
       </div>
     </div>
