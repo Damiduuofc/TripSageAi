@@ -9,7 +9,7 @@ function Hotels({ trip }) {
         {trip?.tripData?.hotels?.map((hotel, index) => (
           <a 
             key={index}
-            href={'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(hotel?.hotelAddress || '')} 
+            href={'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(hotel?.hotelName || '')} 
             target='_blank' 
             rel='noopener noreferrer'
             className='hover:scale-105 transition-all cursor-pointer'
