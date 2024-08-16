@@ -27,6 +27,7 @@ function UserTripCardItem({ trip }) {
           <p className='mt-2 text-gray-700'>🏄🏻‍♂️ Travelers: {trip?.userSelection?.Traveler}</p>
         </div>
       </div>
+      
     </Link>
   );
 }
