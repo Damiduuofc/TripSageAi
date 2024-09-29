@@ -1,31 +1,22 @@
 import React, { useEffect, useState } from 'react';
 import GooglePlacesAutocomplete from 'react-google-places-autocomplete';
 import { AI_PROMPT, SelectBudgetOptions, SelectTravelersList } from '../constants/options.jsx';
-import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 import { chatSession } from '@/service/AIModal.jsx';
-import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogHeader,
-    DialogTitle,
-} from "@/components/ui/dialog";
-import { FcGoogle } from "react-icons/fc";
 import { useAuth } from '@/contexts/AuthContext';
-import axios from 'axios';
 import { doc, setDoc } from 'firebase/firestore';
 import { db } from '@/service/firebaseConfig.jsx';
-import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { useNavigate } from 'react-router-dom';
-import GridPattern from '../components/magicui/grid-pattern.jsx'; // Import GridPattern
+import GridPattern from '../components/magicui/grid-pattern.jsx';
+import { Button } from '@/components/ui/button.jsx';
+import { AiOutlineLoading3Quarters } from 'react-icons/ai';
 
 function CreateTrip() {
     const [place, setPlace] = useState(null);
     const [formData, setFormData] = useState({ location: '', noOfdays: '', budget: '', Traveler: '' });
-    const [error, setError] = useState('');
+    const [error, setError] = useState({}); // Store error per field
     const [loading, setLoading] = useState(false);
-    const { user, login, openDialog, setOpenDialog } = useAuth();
+    const { user, setOpenDialog } = useAuth();
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -37,25 +28,43 @@ function CreateTrip() {
             ...prevState,
             [field]: value
         }));
+        setError(prevError => ({
+            ...prevError,
+            [field]: '' // Clear error for this field when it changes
+        }));
     };
 
     const OnGenerateTrip = async () => {
+        let errors = {};
+
+        // Validate fields
+        if (!formData.location) errors.location = 'Please select a destination.';
+        if (!formData.noOfdays) errors.noOfdays = 'Please enter the number of days.';
+        if (!formData.budget) errors.budget = 'Please select a budget.';
+        if (!formData.Traveler) errors.Traveler = 'Please select the number of travelers.';
+
+        // Check number of days validation and show toast if invalid
+        if (formData.noOfdays <= 0 || formData.noOfdays > 10) {
+            errors.noOfdays = "Number of days should be between 1 and 10.";
+            toast.error("Please enter a number of days between 1 and 10.");
+        }
+
+        if (Object.keys(errors).length > 0) {
+            setError(errors);
+            if (!errors.noOfdays) { // Show this toast only when the number of days error is not triggered
+                toast.error("Please fill out all fields correctly.");
+            }
+            return;
+        }
+
+        // Check if user is logged in
         if (!user) {
             setOpenDialog(true);
             return;
         }
-        if (formData.noOfdays <= 0 || formData.noOfdays > 10) {
-            toast.error("Number of days should be between 1 and 10.");
-            return;
-        }
 
-        if (!formData.location || !formData.noOfdays || !formData.budget || !formData.Traveler) {
-            setError('Please fill out all fields.');
-            return;
-        }
-
-        setError('');
         setLoading(true);
+
         const FINAL_PROMPT = AI_PROMPT
             .replace('{location}', formData?.location?.label || '')
             .replace('{totalDays}', formData.noOfdays)
@@ -64,8 +73,10 @@ function CreateTrip() {
 
         try {
             const result = await chatSession.sendMessage(FINAL_PROMPT);
-            console.log("Generated Trip Data:", result?.response?.text());
-            await SaveAiTrip(result?.response?.text());
+            const generatedTripData = result?.response?.text();
+            console.log("Generated Trip Data:", generatedTripData);
+
+            await SaveAiTrip(generatedTripData);
         } catch (error) {
             toast.error("An error occurred while generating the trip.");
             console.error(error);
@@ -108,10 +119,8 @@ function CreateTrip() {
 
     return (
         <div className='relative overflow-hidden'>
-            {/* Background Pattern */}
             <GridPattern width={40} height={40} strokeDasharray="4" className="absolute inset-0" />
 
-            {/* Main Content */}
             <div className='relative sm:px-10 md:px-32 lg:px-56 xl:px-10 p-5 mt-20'>
                 <h2 className='font-bold text-3xl'>Tell us your travel preferences 🌍✈️🏖️🏔️🍽️🏨</h2>
                 <p className='mt-3 text-gray-500 text-xl'>
@@ -122,13 +131,15 @@ function CreateTrip() {
                     <div>
                         <h2 className='text-xl my-3 font-medium'>What's your destination of choice?</h2>
                         <GooglePlacesAutocomplete
-    apiKey={import.meta.env.VITE_GOOGLE_PLACE_API_KEY}
-    selectProps={{
-        value: place,
-        onChange: (v) => { setPlace(v); handleInputChange('location', v); }
-    }}
-/>
-                    </div> 
+                            apiKey={import.meta.env.VITE_GOOGLE_PLACE_API_KEY}
+                            selectProps={{
+                                value: place,
+                                onChange: (v) => { setPlace(v); handleInputChange('location', v); }
+                            }}
+                        />
+                        {error.location && <p className='text-red-500'>{error.location}</p>}
+                    </div>
+
                     <div>
                         <h2 className='text-xl my-3 font-medium'>How many days are you planning for your trip?</h2>
                         <input
@@ -138,8 +149,9 @@ function CreateTrip() {
                             value={formData.noOfdays}
                             onChange={(e) => handleInputChange('noOfdays', e.target.value)}
                         />
+                        {error.noOfdays && <p className='text-red-500'>{error.noOfdays}</p>}
                     </div>
-                    {error && <p className='text-red-500'>{error}</p>}
+
                     <div>
                         <h2 className='text-xl my-3 font-medium'>What's your budget?</h2>
                         <div className='grid grid-cols-3 gap-5 mt-5'>
@@ -153,6 +165,7 @@ function CreateTrip() {
                                 </div>
                             ))}
                         </div>
+                        {error.budget && <p className='text-red-500'>{error.budget}</p>}
                     </div>
 
                     <div>
@@ -168,13 +181,14 @@ function CreateTrip() {
                                 </div>
                             ))}
                         </div>
+                        {error.Traveler && <p className='text-red-500'>{error.Traveler}</p>}
                     </div>
+
                     <div className='my-10 justify-end flex'>
                         <Button
                             disabled={loading}
                             onClick={OnGenerateTrip}
-                            className='flex items-center'
-                        >
+                            className='flex items-center'>
                             {loading ? (
                                 <>
                                     <AiOutlineLoading3Quarters className='h-7 w-7 animate-spin' />

@@ -6,7 +6,6 @@ import BlurIn from "../magicui/blur-in";
 function Hero() {
   return (
     <div className='flex flex-col items-center mx-4 sm:mx-56 gap-4 sm:gap-9 mt-14'>
-
       <BlurIn 
         word={<>
           <span className='bg-gradient-to-r from-green-300 via-blue-500 to-purple-600 bg-clip-text text-transparent text-3xl sm:text-5xl mt-10'>

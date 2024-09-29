@@ -16,6 +16,8 @@
     "@radix-ui/react-slot": "^1.1.0",
     "@react-oauth/google": "^0.12.1",
     "@rollup/plugin-alias": "^5.1.0",
+    "@tsparticles/engine": "^3.5.0",
+    "@tsparticles/react": "^3.0.0",
     "axios": "^1.7.4",
     "bootstrap": "^5.3.3",
     "class-variance-authority": "^0.7.0",
@@ -33,8 +35,9 @@
     "react-router-dom": "^6.25.1",
     "react-select": "^5.8.0",
     "sonner": "^1.5.0",
-    "tailwind-merge": "^2.4.0",
-    "tailwindcss-animate": "^1.0.7"
+    "tailwind-merge": "^2.5.2",
+    "tailwindcss-animate": "^1.0.7",
+    "tsparticles": "^3.5.0"
   },
   "devDependencies": {
     "@types/node": "^22.0.0",
